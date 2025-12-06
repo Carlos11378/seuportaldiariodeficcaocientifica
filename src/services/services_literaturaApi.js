@@ -301,3 +301,4 @@ const gerarPremiosFallback = () => [
 export const configurarAtualizacaoAutomatica = (callback, intervalo = 6) => {
   return setInterval(callback, intervalo * 60 * 60 * 1000); // Intervalo em horas
 };
+
