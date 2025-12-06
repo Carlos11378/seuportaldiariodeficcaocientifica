@@ -520,19 +520,428 @@ A trama segue Julia tentando prevenir um colapso catastrófico através de infin
                                       <span className="font-bold text-cyan-400">{comentario.autor}</span>
                                       <span className="text-sm text-gray-500">{comentario.tempo}</span>
                                     </div>
-    <p className="text-gray-300 leading-relaxed mb-3">{comentario.texto}</p>
-
-    <button className="flex items-center gap-2 text-sm text-gray-400">
-        <span>Responder</span>
-    </button>
-</div>
-            )}
+                                    <p className="text-gray-300 leading-relaxed mb-3">{comentario.texto}</p>
+                                    <button className="flex items-center gap-2 text-sm text-gray-400 hover:text-pink-400 transition-all">
+                                      <ThumbsUp className="w-4 h-4" />
+                                      <span>{comentario.curtidas}</span>
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </article>
+          )}
         </div>
-    </article>
-)}
-</div>
-</div>
-</div>
-);
-}
+      </div>
+    );
+  }
 
+  return (
+    <div className="min-h-screen bg-black text-white">
+      {/* Header */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-xl border-b border-purple-500/30">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-purple-600 rounded-lg flex items-center justify-center">
+                <BookOpen className="w-6 h-6 text-black" />
+              </div>
+              <div>
+                <h1 className="text-xl font-black text-white">FC Brasil</h1>
+                <p className="text-sm text-gray-400">Ficção Científica Nacional</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="text-right">
+                <p className="text-sm text-gray-400">São Paulo, Brasil</p>
+                <p className="text-xs text-purple-400 font-bold">{formatDate()}</p>
+              </div>
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            </div>
+          </div>
+
+          {/* Navigation Tabs */}
+          <div className="flex gap-2 bg-white/5 rounded-xl p-1">
+            {[
+              { id: 'hoje', label: 'Hoje', icon: Sparkles },
+              { id: 'lancamentos', label: 'Lançamentos', icon: Rocket },
+              { id: 'resenhas', label: 'Resenhas', icon: Star },
+              { id: 'premios', label: 'Prêmios', icon: Award }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-2 px-6 py-3 rounded-lg font-bold transition-all ${
+                  activeTab === tab.id
+                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
+                    : 'text-gray-400 hover:text-white hover:bg-white/10'
+                }`}
+              >
+                <tab.icon className="w-4 h-4" />
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="pt-32 pb-12 max-w-7xl mx-auto px-4">
+        {activeTab === 'hoje' && (
+          <div className="space-y-12">
+            {/* Hero Section */}
+            <div className="text-center mb-16">
+              <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-600 to-purple-600 rounded-full text-white font-bold mb-6">
+                <Zap className="w-5 h-5" />
+                Destaque do Dia
+              </div>
+              <h2 className="text-5xl md:text-7xl font-black mb-6 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Notícias Fresh
+              </h2>
+              <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+                As últimas novidades do universo da ficção científica brasileira e internacional
+              </p>
+            </div>
+
+            {/* News Grid */}
+            <div className="grid lg:grid-cols-2 gap-8">
+              {noticiasHoje.map((noticia) => (
+                <div 
+                  key={noticia.id}
+                  className="group cursor-pointer"
+                  onClick={() => abrirLeitura(noticia, 'noticia')}
+                >
+                  <div className="bg-gradient-to-br from-gray-900 to-black border border-purple-500/30 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-purple-500/30 transition-all duration-300 group-hover:scale-105">
+                    <div className="relative">
+                      <img 
+                        src={noticia.imagem}
+                        alt={noticia.titulo}
+                        className="w-full h-64 object-cover"
+                      />
+                      <div className="absolute top-4 left-4">
+                        <span className="px-3 py-1 bg-purple-600 text-white text-sm font-bold rounded-full">
+                          {noticia.categoria}
+                        </span>
+                      </div>
+                      <div className="absolute top-4 right-4 flex items-center gap-2">
+                        <div className="flex items-center gap-1 px-2 py-1 bg-black/70 rounded-lg">
+                          <Eye className="w-4 h-4 text-cyan-400" />
+                          <span className="text-cyan-400 text-sm font-bold">{noticia.views}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="p-6">
+                      <div className="flex items-center gap-2 mb-3 flex-wrap">
+                        {noticia.tags.map((tag, i) => (
+                          <span 
+                            key={i}
+                            className="px-2 py-1 bg-cyan-600/20 text-cyan-400 text-xs font-bold rounded-full border border-cyan-600/30"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+
+                      <h3 className="text-2xl font-black mb-4 text-white group-hover:text-cyan-400 transition-colors leading-tight">
+                        {noticia.titulo}
+                      </h3>
+
+                      <p className="text-gray-400 mb-6 leading-relaxed">
+                        {noticia.resumo}
+                      </p>
+
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4 text-sm text-gray-500">
+                          <span className="flex items-center gap-2">
+                            <Users className="w-4 h-4" />
+                            {noticia.autor}
+                          </span>
+                          <span className="flex items-center gap-2">
+                            <Clock className="w-4 h-4" />
+                            {noticia.tempo}
+                          </span>
+                        </div>
+                        <button className="flex items-center gap-2 text-cyan-400 hover:text-purple-400 font-bold transition-colors">
+                          Ler mais
+                          <ChevronRight className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'lancamentos' && (
+          <div className="space-y-12">
+            <div className="text-center mb-16">
+              <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-blue-600 rounded-full text-white font-bold mb-6">
+                <Rocket className="w-5 h-5" />
+                Novidades
+              </div>
+              <h2 className="text-5xl md:text-7xl font-black mb-6 bg-gradient-to-r from-green-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+                Lançamentos
+              </h2>
+              <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+                Os livros mais quentes do mercado editorial de ficção científica
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {lancamentos.map((livro) => (
+                <div 
+                  key={livro.id}
+                  className="group cursor-pointer"
+                  onClick={() => abrirLeitura(livro, 'livro')}
+                >
+                  <div className="bg-gradient-to-br from-gray-900 to-black border border-purple-500/30 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-purple-500/30 transition-all duration-300 group-hover:scale-105">
+                    <div className="relative">
+                      <img 
+                        src={livro.capa}
+                        alt={livro.titulo}
+                        className="w-full h-80 object-cover"
+                      />
+                      {livro.destaque && (
+                        <div className="absolute top-3 left-3">
+                          <span className="px-3 py-1 bg-red-600 text-white text-sm font-bold rounded-full">
+                            Destaque
+                          </span>
+                        </div>
+                      )}
+                      {livro.novidade && (
+                        <div className="absolute top-3 right-3">
+                          <span className="px-3 py-1 bg-green-600 text-white text-sm font-bold rounded-full">
+                            {livro.novidade}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="p-6">
+                      <RatingStars rating={livro.rating} />
+                      
+                      <h3 className="text-xl font-black mb-2 text-white group-hover:text-cyan-400 transition-colors mt-3">
+                        {livro.titulo}
+                      </h3>
+                      
+                      <p className="text-purple-400 font-bold mb-3">por {livro.autor}</p>
+                      
+                      <div className="mb-4">
+                        <span className="px-3 py-1 bg-blue-600/20 text-blue-400 text-sm font-bold rounded-full border border-blue-600/30">
+                          {livro.genero}
+                        </span>
+                      </div>
+
+                      <p className="text-gray-400 text-sm leading-relaxed mb-4">
+                        {livro.descricao}
+                      </p>
+
+                      <button className="flex items-center gap-2 text-cyan-400 hover:text-purple-400 font-bold transition-colors text-sm">
+                        Ver detalhes
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'resenhas' && (
+          <div className="space-y-12">
+            <div className="text-center mb-16">
+              <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-yellow-600 to-orange-600 rounded-full text-white font-bold mb-6">
+                <Star className="w-5 h-5" />
+                Comunidade
+              </div>
+              <h2 className="text-5xl md:text-7xl font-black mb-6 bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 bg-clip-text text-transparent">
+                Resenhas Diárias
+              </h2>
+              <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+                O que a comunidade está lendo e pensando sobre ficção científica
+              </p>
+            </div>
+
+            <div className="space-y-6">
+              {resenhasDiarias.map((resenha) => (
+                <div 
+                  key={resenha.id}
+                  className="bg-gradient-to-br from-gray-900 to-black border border-purple-500/30 rounded-2xl p-8 hover:shadow-xl hover:shadow-purple-500/20 transition-all"
+                >
+                  <div className="flex items-start gap-6">
+                    <img 
+                      src={resenha.avatar}
+                      alt={resenha.reviewer}
+                      className="w-16 h-16 rounded-full border-3 border-cyan-500"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center gap-4 mb-4">
+                        <div>
+                          <h3 className="font-black text-white">{resenha.reviewer}</h3>
+                          <p className="text-purple-400 font-bold">Resenhando: {resenha.livro}</p>
+                          <p className="text-gray-500 text-sm">por {resenha.autor}</p>
+                        </div>
+                        <div className="flex items-center gap-2 ml-auto">
+                          <RatingStars rating={resenha.rating} />
+                        </div>
+                      </div>
+                      
+                      <p className="text-gray-300 leading-relaxed mb-4">
+                        {resenha.texto}
+                      </p>
+                      
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-500">{resenha.tempo}</span>
+                        <div className="flex items-center gap-6">
+                          <button className="flex items-center gap-2 text-gray-400 hover:text-pink-400 transition-colors">
+                            <Heart className="w-4 h-4" />
+                            <span>{resenha.curtidas}</span>
+                          </button>
+                          <button className="flex items-center gap-2 text-gray-400 hover:text-blue-400 transition-colors">
+                            <MessageCircle className="w-4 h-4" />
+                            <span>{resenha.comentarios}</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'premios' && (
+          <div className="space-y-12">
+            <div className="text-center mb-16">
+              <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full text-white font-bold mb-6">
+                <Award className="w-5 h-5" />
+                Reconhecimento
+              </div>
+              <h2 className="text-5xl md:text-7xl font-black mb-6 bg-gradient-to-r from-purple-400 via-pink-400 to-yellow-400 bg-clip-text text-transparent">
+                Prêmios FC
+              </h2>
+              <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+                Acompanhe os principais prêmios e reconhecimentos da ficção científica mundial
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              {premios.map((premio, index) => (
+                <div 
+                  key={index}
+                  className="bg-gradient-to-br from-gray-900 to-black border border-purple-500/30 rounded-2xl p-8 hover:shadow-xl hover:shadow-purple-500/20 transition-all"
+                >
+                  <div className={`w-16 h-16 ${premio.cor} rounded-full flex items-center justify-center mb-6`}>
+                    <Award className="w-8 h-8 text-white" />
+                  </div>
+                  
+                  <h3 className="text-2xl font-black text-white mb-4">
+                    {premio.nome}
+                  </h3>
+                  
+                  <p className="text-gray-400 mb-6 leading-relaxed">
+                    {premio.status}
+                  </p>
+                  
+                  <button className="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl font-bold hover:shadow-lg transition-all">
+                    Acompanhar
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {/* Additional Awards Section */}
+            <div className="mt-16 text-center">
+              <h3 className="text-3xl font-black text-white mb-8">Mais Prêmios</h3>
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {[
+                  'Argo (Brasil)',
+                  'Jabuti (FC)',
+                  'Philip K. Dick',
+                  'Arthur C. Clarke',
+                  'Asimov',
+                  'World Fantasy',
+                  'Bram Stoker',
+                  'Andre Norton'
+                ].map((premio, index) => (
+                  <div 
+                    key={index}
+                    className="bg-white/5 border border-gray-700 rounded-xl p-4 hover:bg-white/10 transition-all cursor-pointer"
+                  >
+                    <p className="text-white font-bold">{premio}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Footer */}
+      <footer className="border-t border-purple-500/30 bg-black/50 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-4 py-12">
+          <div className="grid md:grid-cols-4 gap-8">
+            <div>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-purple-600 rounded-lg flex items-center justify-center">
+                  <BookOpen className="w-5 h-5 text-black" />
+                </div>
+                <span className="text-xl font-black text-white">FC Brasil</span>
+              </div>
+              <p className="text-gray-400 text-sm leading-relaxed">
+                A maior plataforma de ficção científica do Brasil. Conectando leitores, autores e entusiastas do gênero.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="text-white font-bold mb-4">Conteúdo</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li><a href="#" className="hover:text-cyan-400 transition-colors">Notícias</a></li>
+                <li><a href="#" className="hover:text-cyan-400 transition-colors">Resenhas</a></li>
+                <li><a href="#" className="hover:text-cyan-400 transition-colors">Entrevistas</a></li>
+                <li><a href="#" className="hover:text-cyan-400 transition-colors">Artigos</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-white font-bold mb-4">Comunidade</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li><a href="#" className="hover:text-cyan-400 transition-colors">Fórum</a></li>
+                <li><a href="#" className="hover:text-cyan-400 transition-colors">Clubes de Leitura</a></li>
+                <li><a href="#" className="hover:text-cyan-400 transition-colors">Eventos</a></li>
+                <li><a href="#" className="hover:text-cyan-400 transition-colors">Newsletter</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-white font-bold mb-4">Conecte-se</h4>
+              <div className="flex gap-4 mb-4">
+                <button className="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg flex items-center justify-center hover:scale-110 transition-transform">
+                  <Globe className="w-5 h-5 text-white" />
+                </button>
+                <button className="w-10 h-10 bg-gradient-to-br from-blue-600 to-cyan-600 rounded-lg flex items-center justify-center hover:scale-110 transition-transform">
+                  <MessageCircle className="w-5 h-5 text-white" />
+                </button>
+              </div>
+              <p className="text-xs text-gray-500">
+                © 2024 FC Brasil. Todos os direitos reservados.
+              </p>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
