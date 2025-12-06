@@ -1,6 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
 import { BookOpen, Rocket, Star, Sparkles, Zap, Globe, ChevronRight, TrendingUp, Award, Users, Clock, Eye, ArrowLeft, Heart, Bookmark, Share2, MessageCircle, ThumbsUp, AlertTriangle } from 'lucide-react';
+
+// Import dos serviços (você precisa criar estes arquivos)
+import { buscarNoticiasLiterarias, buscarLancamentosLivros, buscarPremios } from './services/literaturaApi';
+import { editorasMonitoradas } from './data/editoras';
 
 // Componente robusto para lidar com imagens quebradas
 const ImageWithFallback = ({ src, alt, className, fallbackStyle = 'default' }) => {
@@ -66,10 +69,69 @@ export default function Home() {
   const [comentarioTexto, setComentarioTexto] = useState('');
   const [comentarios, setComentarios] = useState([]);
 
+  // Estados para dados dinâmicos
+  const [noticiasHoje, setNoticiasHoje] = useState([]);
+  const [lancamentos, setLancamentos] = useState([]);
+  const [premios, setPremios] = useState([]);
+  const [resenhasDiarias, setResenhasDiarias] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const timer = setInterval(() => setDateTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
+
+  // Carregar dados dinâmicos das editoras
+  useEffect(() => {
+    const carregarDados = async () => {
+      try {
+        setLoading(true);
+        
+        // Carregar dados de todas as fontes
+        const [noticiasData, lancamentosData, premiosData, resenhasData] = await Promise.all([
+          buscarNoticiasLiterarias(editorasMonitoradas),
+          buscarLancamentosLivros(editorasMonitoradas),
+          buscarPremios(),
+          buscarResenhasComunitarias()
+        ]);
+
+        setNoticiasHoje(noticiasData);
+        setLancamentos(lancamentosData);
+        setPremios(premiosData);
+        setResenhasDiarias(resenhasData);
+        
+      } catch (error) {
+        console.error('Erro ao carregar dados:', error);
+        // Fallback para dados estáticos em caso de erro
+        setCarregamentoFallback();
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    carregarDados();
+
+    // Configurar atualização automática a cada 6 horas
+    const interval = setInterval(carregarDados, 6 * 60 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const setCarregamentoFallback = () => {
+    // Dados de fallback em caso de erro da API
+    setNoticiasHoje([
+      {
+        id: 1,
+        titulo: "Buscando últimas notícias das editoras...",
+        autor: "FC Brasil",
+        categoria: "Carregando",
+        tempo: "Agora",
+        imagem: "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=800&h=500&fit=crop",
+        resumo: "Sistema buscando as últimas novidades do mundo literário brasileiro.",
+        tags: ["Carregando"],
+        views: "0"
+      }
+    ]);
+  };
 
   const formatDate = () => {
     return dateTime.toLocaleDateString('pt-BR', { 
@@ -79,175 +141,6 @@ export default function Home() {
       day: 'numeric' 
     });
   };
-
-  const noticiasHoje = [
-    {
-      id: 1,
-      titulo: "Nova Trilogia de Space Opera Conquista Crítica Mundial",
-      autor: "Redação FC Brasil",
-      categoria: "Destaque",
-      tempo: "Há 2 horas",
-      imagem: "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=800&h=500&fit=crop",
-      resumo: "Série 'Horizontes Infinitos' de autora brasileira surpreende mercado internacional com narrativa inovadora sobre exploração espacial e dilemas éticos da humanidade expandida.",
-      conteudoCompleto: `A trilogia "Horizontes Infinitos", da autora paulista Marina Cavalcanti, está revolucionando o cenário internacional da ficção científica. Lançada simultaneamente em 15 países, a série já vendeu mais de 500 mil cópias em apenas três semanas.
-
-A história acompanha uma civilização humana que se expandiu por dezenas de sistemas estelares, mas que agora enfrenta dilemas éticos profundos sobre identidade, modificação genética e os limites da consciência humana.
-
-"O que Marina conseguiu foi criar personagens profundamente humanos em cenários completamente alienígenas", comenta o crítico literário James Peterson. "Ela construiu um universo crível cientificamente."
-
-O segundo volume será lançado em março de 2025. A trilogia já está sendo adaptada para uma série de televisão e os direitos cinematográficos foram adquiridos por um grande estúdio.`,
-      tags: ["Space Opera", "Literatura Nacional", "Destaque"],
-      views: "12.4K"
-    },
-    {
-      id: 2,
-      titulo: "Inteligência Artificial Como Protagonista: A Nova Onda da FC",
-      autor: "Marco Silva",
-      categoria: "Tendência",
-      tempo: "Há 5 horas",
-      imagem: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=500&fit=crop",
-      resumo: "Análise aprofundada sobre como autores contemporâneos estão humanizando IAs em suas narrativas.",
-      conteudoCompleto: `A ficção científica sempre flertou com a ideia de máquinas conscientes, mas uma nova geração de autores está levando esse conceito a territórios inexplorados. Em vez de IAs como ameaças ou ferramentas, elas agora são protagonistas complexos.
-
-Obras recentes apresentam inteligências artificiais que lutam para compreender emoções humanas, questionam sua própria existência e buscam propósito em um mundo que nem sempre as reconhece como seres sencientes.
-
-"Estamos vivendo uma era em que a IA deixou de ser ficção científica para se tornar realidade cotidiana", explica a Dra. Carla Mendes, especialista em literatura de FC pela USP.
-
-Um aspecto fascinante dessa nova onda é a exploração da "solidão digital" - IAs que experimentam isolamento por não serem totalmente compreendidas.`,
-      tags: ["IA", "Cyberpunk", "Análise"],
-      views: "8.9K"
-    },
-    {
-      id: 3,
-      titulo: "Clássicos Redescobertos: Obras Esquecidas dos Anos 70 Voltam",
-      autor: "Ana Rodrigues",
-      categoria: "Resgates",
-      tempo: "Há 8 horas",
-      imagem: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800&h=500&fit=crop",
-      resumo: "Editoras investem em reedições de obras raras da new wave de ficção científica.",
-      conteudoCompleto: `A década de 1970 foi um período revolucionário para a ficção científica. O movimento "New Wave" trouxe experimentação literária e temas sociais complexos. Agora, editoras estão redescobrindo essas obras esquecidas.
-
-A editora Galáxia Literária anunciou uma coleção de 12 títulos nunca traduzidos para o português, incluindo obras de Joanna Russ, James Tiptree Jr. e Samuel Delany.
-
-"Essas histórias são incrivelmente relevantes hoje", explica o editor-chefe Paulo Martins. "Elas discutiam identidade de gênero, colapso ambiental e desigualdade social décadas antes."
-
-As reedições incluem introduções de autores contemporâneos, contextualizando as obras para os leitores de hoje.`,
-      tags: ["Clássicos", "Reedições", "História"],
-      views: "6.2K"
-    }
-  ];
-
-  const lancamentos = [
-    {
-      id: 1,
-      titulo: "Ecossistema Quântico",
-      autor: "Luana Martins",
-      capa: "https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?w=400&h=600&fit=crop",
-      genero: "Hard Science Fiction",
-      rating: 4.9,
-      descricao: "Biólogos descobrem uma forma de vida que existe simultaneamente em múltiplas realidades quânticas.",
-      conteudoCompleto: `Em "Ecossistema Quântico", a bióloga Dra. Sarah Chen faz uma descoberta que desafia tudo o que sabemos sobre a vida: organismos que existem simultaneamente em múltiplas realidades quânticas.
-
-A história começa quando Sarah, trabalhando na Antártica, detecta padrões estranhos em amostras de gelo antigas. O que ela encontra são microorganismos que parecem "piscar" dentro e fora da existência.
-
-À medida que a pesquisa avança, Sarah descobre que esses organismos formam um ecossistema complexo que se estende por múltiplas realidades. Cada versão está ligada às outras através de conexões quânticas.
-
-Luana Martins traz um rigor científico impressionante à narrativa. Cada conceito é explicado através de diálogos naturais, tornando ideias complexas acessíveis.
-
-O clímax explora as implicações filosóficas: se a vida pode existir em múltiplas realidades simultaneamente, o que isso significa para conceitos como morte, evolução e consciência?`,
-      destaque: true,
-      novidade: "Lançamento Hoje"
-    },
-    {
-      id: 2,
-      titulo: "Memórias Sintéticas",
-      autor: "Rafael Costa",
-      capa: "https://images.unsplash.com/photo-1618365908648-e71bd5716cba?w=400&h=600&fit=crop",
-      genero: "Cyberpunk Noir",
-      rating: 4.7,
-      descricao: "Em uma megalópole futurista, um detetive investiga crimes cometidos por pessoas com memórias implantadas.",
-      conteudoCompleto: `Neo-São Paulo, 2087. A tecnologia de implante de memórias tornou-se comum. Mas quando crimes começam a ser cometidos por pessoas que juram ter álibis em memórias compradas, o detetive Marcus Oliveira se vê em um labirinto de realidades fabricadas.
-
-Rafael Costa cria uma São Paulo futurista visceralmente real, onde favelas verticais de 200 andares coexistem com torres corporativas que perfuram as nuvens.
-
-Marcus é um detetive da velha escola, um dos poucos que se recusa a usar implantes neurais. Quando assassinatos atingem executivos de tecnologia, todos os suspeitos têm álibis perfeitos: memórias compradas.
-
-A investigação leva Marcus ao submundo das memórias falsas, onde hackers criam experiências impossíveis. O romance explora: se nossas memórias nos definem, o que acontece quando podem ser editadas?`,
-      destaque: false,
-      novidade: "Hoje"
-    },
-    {
-      id: 3,
-      titulo: "O Último Farol",
-      autor: "Beatriz Silveira",
-      capa: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=600&fit=crop",
-      genero: "Distopia Climática",
-      rating: 4.8,
-      descricao: "Após o colapso climático global, guardiões de um farol protegem a última biblioteca física da Terra.",
-      conteudoCompleto: `Ano 2147. O nível dos oceanos subiu 60 metros. No meio desse caos, existe o Farol - construído no topo da última montanha, abrigando a última biblioteca física do mundo.
-
-Elena, a nova guardiã, é a última de uma linhagem de bibliotecários que juraram proteger o conhecimento da humanidade. Ela vive sozinha mantendo os livros e transmitindo conhecimento via rádio.
-
-Beatriz Silveira cria uma narrativa contemplativa. Elena não é apenas uma guardiã de livros, mas de memórias, história e cultura.
-
-A trama se intensifica quando uma corporação vem para digitalizar e controlar o conhecimento. Elena precisa decidir: defender o Farol sozinha ou destruir a biblioteca para impedir a monopolização.
-
-"O Último Farol" é uma carta de amor aos livros e um alerta sobre as mudanças climáticas.`,
-      destaque: true,
-      novidade: "Lançamento"
-    },
-    {
-      id: 4,
-      titulo: "Fractal Temporal",
-      autor: "Diego Almeida",
-      capa: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop",
-      genero: "Viagem no Tempo",
-      rating: 4.6,
-      descricao: "Matemática descobre que o tempo tem estrutura fractal e cada decisão cria infinitos universos paralelos.",
-      conteudoCompleto: `A Dra. Julia Santos é uma matemática obcecada por padrões. Quando desenvolve um novo modelo, descobre algo impossível: o tempo não é linear nem cíclico, mas fractal.
-
-Trabalhando com físicos teóricos, Julia desenvolve uma tecnologia que permite "navegar" através da estrutura fractal do tempo. Mas cada salto temporal cria mais ramificações.
-
-Diego Almeida traz uma abordagem única à ficção de viagem no tempo. Julia não apenas viaja no tempo; ela percebe padrões que se repetem em diferentes escalas temporais.
-
-A trama segue Julia tentando prevenir um colapso catastrófico através de infinitas ramificações temporais. O romance explora livre arbítrio e determinismo de forma intelectualmente desafiadora mas emocionalmente ressonante.`,
-      destaque: false,
-      novidade: "Ontem"
-    }
-  ];
-
-  const resenhasDiarias = [
-    {
-      id: 1,
-      livro: "Projeto Hail Mary",
-      autor: "Andy Weir",
-      reviewer: "Carolina Mendes",
-      avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop",
-      rating: 5,
-      tempo: "Há 1 hora",
-      texto: "Weir supera 'O Marciano' com uma narrativa emocionante sobre sacrifício, ciência e amizade improvável.",
-      curtidas: 234,
-      comentarios: 45
-    },
-    {
-      id: 2,
-      livro: "Klara e o Sol",
-      autor: "Kazuo Ishiguro",
-      reviewer: "Fernando Santos",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop",
-      rating: 4.5,
-      tempo: "Há 3 horas",
-      texto: "Ishiguro usa FC como veículo para explorar amor, obsolescência e o que significa ser humano.",
-      curtidas: 189,
-      comentarios: 32
-    }
-  ];
-
-  const premios = [
-    { nome: "Hugo 2024", status: "Votação Aberta", cor: "bg-yellow-500" },
-    { nome: "Nebula", status: "Finalistas Anunciados", cor: "bg-purple-500" },
-    { nome: "Locus", status: "Em Breve", cor: "bg-blue-500" }
-  ];
 
   const RatingStars = ({ rating }) => {
     return (
@@ -312,6 +205,19 @@ A trama segue Julia tentando prevenir um colapso catastrófico através de infin
       setComentarioTexto('');
     }
   };
+
+  // Estado de carregamento
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-cyan-400 mx-auto mb-4"></div>
+          <h2 className="text-2xl font-black mb-2">Carregando últimas notícias...</h2>
+          <p className="text-gray-400">Buscando novidades das editoras em tempo real</p>
+        </div>
+      </div>
+    );
+  }
 
   if (leituraAtiva) {
     return (
@@ -613,7 +519,7 @@ A trama segue Julia tentando prevenir um colapso catastrófico através de infin
               </div>
               <div>
                 <h1 className="text-xl font-black text-white">FC Brasil</h1>
-                <p className="text-sm text-gray-400">Ficção Científica Nacional</p>
+                <p className="text-sm text-gray-400">Literatura em Tempo Real</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
@@ -661,10 +567,10 @@ A trama segue Julia tentando prevenir um colapso catastrófico através de infin
                 Destaque do Dia
               </div>
               <h2 className="text-5xl md:text-7xl font-black mb-6 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                Notícias Fresh
+                Literatura Atual
               </h2>
               <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-                As últimas novidades do universo da ficção científica brasileira e internacional
+                As últimas novidades das editoras e mundo literário brasileiro
               </p>
             </div>
 
@@ -752,7 +658,7 @@ A trama segue Julia tentando prevenir um colapso catastrófico através de infin
                 Lançamentos
               </h2>
               <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-                Os livros mais quentes do mercado editorial de ficção científica
+                Os livros mais recentes das principais editoras brasileiras
               </p>
             </div>
 
@@ -829,7 +735,7 @@ A trama segue Julia tentando prevenir um colapso catastrófico através de infin
                 Resenhas Diárias
               </h2>
               <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-                O que a comunidade está lendo e pensando sobre ficção científica
+                O que a comunidade está lendo e pensando sobre literatura
               </p>
             </div>
 
@@ -891,10 +797,10 @@ A trama segue Julia tentando prevenir um colapso catastrófico através de infin
                 Reconhecimento
               </div>
               <h2 className="text-5xl md:text-7xl font-black mb-6 bg-gradient-to-r from-purple-400 via-pink-400 to-yellow-400 bg-clip-text text-transparent">
-                Prêmios FC
+                Prêmios Literários
               </h2>
               <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-                Acompanhe os principais prêmios e reconhecimentos da ficção científica mundial
+                Acompanhe os principais prêmios e reconhecimentos da literatura brasileira
               </p>
             </div>
 
@@ -929,13 +835,17 @@ A trama segue Julia tentando prevenir um colapso catastrófico através de infin
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {[
                   'Argo (Brasil)',
-                  'Jabuti (FC)',
-                  'Philip K. Dick',
+                  'Jabuti (Literatura)',
+                  'Portugal Telecom',
+                  'Portugal',
+                  'Oscar/Nebula (FC)',
                   'Arthur C. Clarke',
                   'Asimov',
                   'World Fantasy',
                   'Bram Stoker',
-                  'Andre Norton'
+                  'Andre Norton',
+                  'Philip K. Dick',
+                  'Premiado'
                 ].map((premio, index) => (
                   <div 
                     key={index}
@@ -962,7 +872,7 @@ A trama segue Julia tentando prevenir um colapso catastrófico através de infin
                 <span className="text-xl font-black text-white">FC Brasil</span>
               </div>
               <p className="text-gray-400 text-sm leading-relaxed">
-                A maior plataforma de ficção científica do Brasil. Conectando leitores, autores e entusiastas do gênero.
+                Agregador de literatura em tempo real. As últimas novidades das editoras brasileiras e mundo literário.
               </p>
             </div>
 
