@@ -520,5 +520,9 @@ A trama segue Julia tentando prevenir um colapso catastrófico através de infin
                                       <span className="font-bold text-cyan-400">{comentario.autor}</span>
                                       <span className="text-sm text-gray-500">{comentario.tempo}</span>
                                     </div>
-                                    <p className="text-gray-300 leading-relaxed mb-3">{comentario.texto}</p>
-                                    <button className="flex items-center gap-2 text-sm text-
+    <p className="text-gray-300 leading-relaxed mb-3">{comentario.texto}</p>
+
+    <button className="flex items-center gap-2 text-sm text-gray-400">
+        <span>Responder</span>
+    </button>
+</div>
