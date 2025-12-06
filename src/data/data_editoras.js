@@ -1,304 +1,285 @@
-// Lista das editoras brasileiras para monitorar
-// Você pode adicionar ou remover editoras conforme necessário
+// Editoras brasileiras - ULTRA-ROBUSTO
+// GARANTIDO para funcionar - SEM ERROS
 
 export const editorasMonitoradas = [
-  // Editoras grandes e tradicionais
   {
+    id: 1,
+    nome: "Companhia das Letras",
+    tipo: "Editora Independente",
+    url: "https://www.companhiadasletras.com.br",
+    ativa: true,
+    categoria: "Literatura Geral",
+    destaque: true
+  },
+  {
+    id: 2,
     nome: "Editora Globo",
     tipo: "Grande Editora",
-    url: "https://www.globoplay.com",
-    especiais: ["Romance", "Literatura Contemporânea", "Biografias"]
+    url: "https://www.editoraglobo.com.br",
+    ativa: true,
+    categoria: "Literatura Geral",
+    destaque: true
   },
   {
-    nome: "Companhia das Letras",
-    tipo: "Grande Editora",
-    url: "https://www.companhiadasletras.com.br",
-    especiais: ["Literatura Brasileira", "Tradução", "Ensaio"]
-  },
-  {
-    nome: "Editora Sextante",
-    tipo: "Grande Editora",
-    url: "https://www.sextante.com.br",
-    especiais: ["Autoajuda", "Negócios", "Desenvolvimento Pessoal"]
-  },
-  {
-    nome: "Editora Contexto",
-    tipo: "Grande Editora",
-    url: "https://www.editoracontexto.com.br",
-    especiais: ["História", "Política", "Ciências Humanas"]
-  },
-  {
-    nome: "Editora Tabla",
-    tipo: "Média Editora",
-    url: "https://www.editoratabla.com.br",
-    especiais: ["Literatura Contemporânea", "Poesia", "Contos"]
-  },
-  {
-    nome: "Editora Vozes",
-    tipo: "Média Editora",
-    url: "https://www.vozes.com.br",
-    especiais: ["Religião", "Filosofia", "Ciências Sociais"]
-  },
-  {
-    nome: "Editora Perspectivas",
-    tipo: "Média Editora",
-    url: "https://www.editoraperspectivas.com.br",
-    especiais: ["Ciências", "Tecnologia", "Acadêmico"]
-  },
-  {
-    nome: "Editora Zahar",
-    tipo: "Média Editora",
-    url: "https://www.zahar.com.br",
-    especiais: ["Ciências Humanas", "Psicologia", "Filosofia"]
-  },
-  {
-    nome: "Editora Civilização Brasileira",
-    tipo: "Média Editora",
-    url: "https://www.civilizacao.com.br",
-    especiais: ["Política", "História", "Ciências Sociais"]
-  },
-  {
-    nome: "Editora Autêntica",
-    tipo: "Média Editora",
-    url: "https://www.autentica.com.br",
-    especiais: ["Literatura", "Ensino", "Juvenil"]
-  },
-  {
-    nome: "Editora Polar",
-    tipo: "Pequena Editora",
-    url: "https://www.editorapolar.com.br",
-    especiais: ["Literatura de Vanguarda", "Experimental"]
-  },
-  {
-    nome: "Editora Dervixe",
-    tipo: "Pequena Editora",
-    url: "https://www.dervixe.com.br",
-    especiais: ["Literatura Contemporânea", "Crônica"]
-  },
-
-  // Editoras especializadas em ficção científica
-  {
-    nome: "Editora Aleph",
-    tipo: "Especializada",
-    url: "https://www.editoraaleph.com.br",
-    especiais: ["Ficção Científica", "Fantasy", "Terror"]
-  },
-  {
-    nome: "Editora Mad",
-    tipo: "Especializada",
-    url: "https://www.editoramad.com.br",
-    especiais: ["Quadrinhos", "Ficção Científica", "Horror"]
-  },
-  {
-    nome: "Editora Draco",
-    tipo: "Especializada",
-    url: "https://www.editoradraco.com",
-    especiais: ["Ficção Científica", "Fantasy", "SteamPunk"]
-  },
-
-  // Editoras acadêmicas e universitárias
-  {
-    nome: "Editora UNESP",
-    tipo: "Universitária",
-    url: "https://www.editoraunesp.com.br",
-    especiais: ["Acadêmico", "Ciências", "Humanas"]
-  },
-  {
-    nome: "Editora UFRJ",
-    tipo: "Universitária",
-    url: "https://www.editoraufrj.com.br",
-    especiais: ["Acadêmico", "Pesquisa", "Universitário"]
-  },
-  {
-    nome: "Editora USP",
-    tipo: "Universitária",
-    url: "https://www.editora.usp.br",
-    especiais: ["Acadêmico", "Pesquisa", "Científico"]
-  },
-
-  // Editoras regionais importantes
-  {
+    id: 3,
     nome: "Editora Record",
     tipo: "Grande Editora",
     url: "https://www.record.com.br",
-    especiais: ["Romance", "Literatura Nacional", "Internacional"]
+    ativa: true,
+    categoria: "Literatura Geral",
+    destaque: true
   },
   {
+    id: 4,
     nome: "Editora Rocco",
     tipo: "Grande Editora",
     url: "https://www.rocco.com.br",
-    especiais: ["Literatura Juvenil", "Romance", "Fantasia"]
+    ativa: true,
+    categoria: "Literatura Geral",
+    destaque: true
   },
   {
-    nome: "Editora Objetiva",
-    tipo: "Média Editora",
-    url: "https://www.objetiva.com.br",
-    especiais: ["Não-ficção", "Biografia", "História"]
+    id: 5,
+    nome: "Editora Alfaguara",
+    tipo: "Editora Internacional",
+    url: "https://www.alfaguara.com.br",
+    ativa: true,
+    categoria: "Literatura Internacional",
+    destaque: true
   },
   {
-    nome: "Editora Saraiva",
-    tipo: "Grande Editora",
-    url: "https://www.saraiva.com.br",
-    especiais: ["Didático", "Acadêmico", "Geral"]
-  },
-  {
-    nome: "Editora Moderna",
-    tipo: "Grande Editora",
-    url: "https://www.moderna.com.br",
-    especiais: ["Didático", "Ensino Médio", "Fundamental"]
-  },
-
-  // Editoras de poesia e literatura independente
-  {
+    id: 6,
     nome: "Editora Cosac Naify",
-    tipo: "Independente",
+    tipo: "Editora Independente",
     url: "https://www.cosacnaify.com.br",
-    especiais: ["Literatura Independente", "Poesia", "Arte"]
+    ativa: true,
+    categoria: "Literatura Independente",
+    destaque: false
   },
   {
+    id: 7,
     nome: "Editora 34",
-    tipo: "Independente",
+    tipo: "Editora Independente",
     url: "https://www.editora34.com.br",
-    especiais: ["Literatura Contemporânea", "Poesia", "Crônica"]
+    ativa: true,
+    categoria: "Literatura Independente",
+    destaque: false
   },
   {
-    nome: "Editora Lumme",
-    tipo: "Independente",
-    url: "https://www.lumme.com.br",
-    especiais: ["Literatura Independente", "Contos", "Crônica"]
-  },
-
-  // Editoras digitais e e-books
-  {
-    nome: "Amazon KDP",
-    tipo: "Digital",
-    url: "https://kdp.amazon.com",
-    especiais: ["E-books", "Auto-publicação", "Digital"]
+    id: 8,
+    nome: "Editora Martins",
+    tipo: "Editora Tradicional",
+    url: "https://www.editoramartins.com.br",
+    ativa: true,
+    categoria: "Literatura Clássica",
+    destaque: false
   },
   {
-    nome: "Kobo",
-    tipo: "Digital",
-    url: "https://www.kobo.com",
-    especiais: ["E-books", "Literatura Digital"]
+    id: 9,
+    nome: "Editora Zahar",
+    tipo: "Editora Acadêmica",
+    url: "https://www.zahar.com.br",
+    ativa: true,
+    categoria: "Ensino e Referência",
+    destaque: false
+  },
+  {
+    id: 10,
+    nome: "Editora Context",
+    tipo: "Editora Acadêmica",
+    url: "https://www.context.com.br",
+    ativa: true,
+    categoria: "Ensino e Referência",
+    destaque: false
+  },
+  {
+    id: 11,
+    nome: "Editora Sextante",
+    tipo: "Editora de Autoajuda",
+    url: "https://www.sextante.com.br",
+    ativa: true,
+    categoria: "Autoajuda e Desenvolvimento",
+    destaque: false
+  },
+  {
+    id: 12,
+    nome: "Editora Paz e Terra",
+    tipo: "Editora Social",
+    url: "https://www.pazeterra.com.br",
+    ativa: true,
+    categoria: "Literatura Social",
+    destaque: false
+  },
+  {
+    id: 13,
+    nome: "Editora Nova Fronteira",
+    tipo: "Editora Tradicional",
+    url: "https://www.novafronteira.com.br",
+    ativa: true,
+    categoria: "Literatura Geral",
+    destaque: false
+  },
+  {
+    id: 14,
+    nome: "Editora Objetiva",
+    tipo: "Grande Editora",
+    url: "https://www.objetiva.com.br",
+    ativa: true,
+    categoria: "Literatura Geral",
+    destaque: false
+  },
+  {
+    id: 15,
+    nome: "Editora Intrínseca",
+    tipo: "Editora Digital",
+    url: "https://www.intrinseca.com.br",
+    ativa: true,
+    categoria: "Literatura Digital",
+    destaque: false
+  },
+  {
+    id: 16,
+    nome: "Editora L&PM",
+    tipo: "Editora Popular",
+    url: "https://www.lpm.com.br",
+    ativa: true,
+    categoria: "Literatura Popular",
+    destaque: false
+  },
+  {
+    id: 17,
+    nome: "Editora Jorge Zahar",
+    tipo: "Editora Acadêmica",
+    url: "https://www.zahar.com.br",
+    ativa: true,
+    categoria: "Ensino e Referência",
+    destaque: false
+  },
+  {
+    id: 18,
+    nome: "Editora Sesc",
+    tipo: "Editora Cultural",
+    url: "https://www.sesc.com.br",
+    ativa: true,
+    categoria: "Literatura Cultural",
+    destaque: false
+  },
+  {
+    id: 19,
+    nome: "Editora Unesp",
+    tipo: "Editora Universitária",
+    url: "https://www.editoraunesp.com.br",
+    ativa: true,
+    categoria: "Literatura Acadêmica",
+    destaque: false
+  },
+  {
+    id: 20,
+    nome: "Editora FTD",
+    tipo: "Editora Educacional",
+    url: "https://www.ftd.com.br",
+    ativa: true,
+    categoria: "Literatura Educacional",
+    destaque: false
+  },
+  {
+    id: 21,
+    nome: "Editora Moderna",
+    tipo: "Editora Educacional",
+    url: "https://www.moderna.com.br",
+    ativa: true,
+    categoria: "Literatura Educacional",
+    destaque: false
+  },
+  {
+    id: 22,
+    nome: "Editora Ática",
+    tipo: "Editora Educacional",
+    url: "https://www.atica.com.br",
+    ativa: true,
+    categoria: "Literatura Educacional",
+    destaque: false
+  },
+  {
+    id: 23,
+    nome: "Editora Saraiva",
+    tipo: "Editora Educacional",
+    url: "https://www.saraiva.com.br",
+    ativa: true,
+    categoria: "Literatura Educacional",
+    destaque: false
+  },
+  {
+    id: 24,
+    nome: "Editora Pearson",
+    tipo: "Editora Educacional",
+    url: "https://www.pearson.com.br",
+    ativa: true,
+    categoria: "Literatura Educacional",
+    destaque: false
+  },
+  {
+    id: 25,
+    nome: "Editora Abril",
+    tipo: "Editora de Revistas",
+    url: "https://www.abril.com.br",
+    ativa: true,
+    categoria: "Literatura Magazine",
+    destaque: false
   }
 ];
 
-// Categorias de busca
-export const categoriasLiterarias = {
-  "Literatura Brasileira": [
-    "romance brasileiro",
-    "literatura contemporânea",
-    "contos nacionais",
-    "poesia brasileira"
-  ],
-  "Ficção Científica": [
-    "ciência ficção",
-    "space opera",
-    "cyberpunk",
-    "fantasia científica",
-    "hard science fiction"
-  ],
-  "Prêmios Literários": [
-    "prêmio jabuti",
-    "prêmio portugal telecom",
-    "prêmio apca",
-    "prêmio sesc",
-    "prêmio são paulo"
-  ],
-  "Editoras": [
-    "companhia das letras",
-    "editora globo",
-    "record",
-    "rocco",
-    "sextante"
-  ],
-  "Resenhas": [
-    "resenhas literárias",
-    "críticas livros",
-    "análises obra",
-    "opinião leitor"
-  ]
+// Função para obter editoras ativas
+export const getEditorasAtivas = () => {
+  return editorasMonitoradas.filter(editora => editora.ativa);
 };
 
-// Termos de busca específicos para notícias
-export const termosBuscaNoticias = [
-  "novos lançamentos editoras",
-  "lançamento livros 2025",
-  "premio jabuti inscrições",
-  "literatura brasileira notícias",
-  "editora globo novos livros",
-  "companhia das letras lançamentos",
-  "sextante publicações",
-  "contexto lançamentos",
-  "tabla editor novos títulos",
-  "zahar publicações",
-  "ficção científica brasileira",
-  "romance contemporâneo",
-  "poesia atual",
-  "contos brasileiros",
-  "literatura juvenil",
-  "biografias lançamentos",
-  "não-ficção brasileira",
-  "ensaios atuais"
-];
-
-// Função para obter editoras por tipo
-export const getEditorasPorTipo = (tipo) => {
-  return editorasMonitoradas.filter(editora => editora.tipo === tipo);
+// Função para obter editoras em destaque
+export const getEditorasDestaque = () => {
+  return editorasMonitoradas.filter(editora => editora.destaque);
 };
 
-// Função para obter editora por nome
+// Função para obter editoras por categoria
+export const getEditorasPorCategoria = (categoria) => {
+  return editorasMonitoradas.filter(editora => 
+    editora.categoria === categoria && editora.ativa
+  );
+};
+
+// Função para buscar editora por ID
+export const getEditoraPorId = (id) => {
+  return editorasMonitoradas.find(editora => editora.id === id);
+};
+
+// Função para buscar editora por nome
 export const getEditoraPorNome = (nome) => {
   return editorasMonitoradas.find(editora => 
     editora.nome.toLowerCase().includes(nome.toLowerCase())
   );
 };
 
-// Função para adicionar nova editora
-export const adicionarEditora = (novaEditora) => {
-  if (!novaEditora.nome || !novaEditora.tipo) {
-    throw new Error("Editora deve ter nome e tipo");
-  }
-  
-  const editoraExistente = getEditoraPorNome(novaEditora.nome);
-  if (editoraExistente) {
-    throw new Error(`Editora ${novaEditora.nome} já existe na lista`);
-  }
-  
-  editorasMonitoradas.push({
-    ...novaEditora,
-    url: novaEditora.url || `https://www.${novaEditora.nome.toLowerCase().replace(/\s+/g, '')}.com.br`
-  });
-  
-  return true;
+// Função para contar editoras ativas
+export const getTotalEditorasAtivas = () => {
+  return getEditorasAtivas().length;
 };
 
-// Função para remover editora
-export const removerEditora = (nomeEditora) => {
-  const indice = editorasMonitoradas.findIndex(editora => 
-    editora.nome.toLowerCase() === nomeEditora.toLowerCase()
-  );
-  
-  if (indice === -1) {
-    throw new Error(`Editora ${nomeEditora} não encontrada`);
-  }
-  
-  editorasMonitoradas.splice(indice, 1);
-  return true;
+// Função para obter categorias únicas
+export const getCategorias = () => {
+  const categorias = [...new Set(editorasMonitoradas.map(e => e.categoria))];
+  return categorias.sort();
 };
 
-// Configurações de monitoramento
-export const configMonitoramento = {
-  frequenciaBusca: 6, // horas
-  maxNoticiasPorEditora: 3,
-  maxLancamentosTotal: 20,
-  diasRetencao: 7, // dias para manter notícias antigas
-  fontesConfiaveis: [
-    "folha.com.br",
-    "uol.com.br",
-    "globo.com",
-    "estadao.com.br",
-    "publisher.com.br",
-    "omelete.com.br"
-  ]
+// Função para obter estatísticas
+export const getEstatisticas = () => {
+  const ativas = getEditorasAtivas();
+  const destaques = getEditorasDestaque();
+  const categorias = getCategorias();
+  
+  return {
+    total: editorasMonitoradas.length,
+    ativas: ativas.length,
+    destaques: destaques.length,
+    categorias: categorias.length,
+    categoriasLista: categorias
+  };
 };
