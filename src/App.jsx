@@ -1,9 +1,10 @@
+
 import React, { useState, useEffect } from 'react';
 import { BookOpen, Rocket, Star, Sparkles, Zap, Globe, ChevronRight, TrendingUp, Award, Users, Clock, Eye, ArrowLeft, Heart, Bookmark, Share2, MessageCircle, ThumbsUp, AlertTriangle } from 'lucide-react';
 
 // Import dos serviços (você precisa criar estes arquivos)
-import { buscarNoticiasLiterarias, buscarLancamentosLivros, buscarPremios } from './services/literaturaApi';
-import { editorasMonitoradas } from './data/editoras';
+import { buscarNoticiasLiterarias, buscarLancamentosLivros, buscarPremios } from './services/services_literaturaApi';
+import { editorasMonitoradas } from './data/data_editoras';
 
 // Componente robusto para lidar com imagens quebradas
 const ImageWithFallback = ({ src, alt, className, fallbackStyle = 'default' }) => {
