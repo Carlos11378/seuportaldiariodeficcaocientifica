@@ -1,7 +1,60 @@
 import React, { useState, useEffect } from 'react';
-import { BookOpen, Rocket, Star, Sparkles, Zap, Globe, ChevronRight, TrendingUp, Award, Users, Clock, Eye, ArrowLeft, Heart, Bookmark, Share2, MessageCircle, ThumbsUp } from 'lucide-react';
+import { BookOpen, Rocket, Star, Sparkles, Zap, Globe, ChevronRight, TrendingUp, Award, Users, Clock, Eye, ArrowLeft, Heart, Bookmark, Share2, MessageCircle, ThumbsUp, AlertTriangle } from 'lucide-react';
 
-export default function App() {
+// Componente robusto para lidar com imagens quebradas
+const ImageWithFallback = ({ src, alt, className, fallbackStyle = 'default' }) => {
+  const [imageSrc, setImageSrc] = useState(src);
+  const [imageError, setImageError] = useState(false);
+  const [fallbackMode, setFallbackMode] = useState(false);
+
+  // URLs de fallback quando a imagem principal falha
+  const fallbackUrls = {
+    book: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop",
+    noticia: "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=800&h=500&fit=crop",
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop"
+  };
+
+  useEffect(() => {
+    setImageSrc(src);
+    setImageError(false);
+    setFallbackMode(false);
+  }, [src]);
+
+  const handleError = () => {
+    if (!fallbackMode && !imageError) {
+      // Tenta usar URL de fallback primeiro
+      const fallbackUrl = fallbackUrls[fallbackStyle] || fallbackUrls.book;
+      setImageSrc(fallbackUrl);
+      setFallbackMode(true);
+    } else if (fallbackMode) {
+      // Se o fallback também falhar, mostra placeholder
+      setImageError(true);
+    }
+  };
+
+  if (imageError) {
+    return (
+      <div className={`${className} bg-gradient-to-br from-purple-900/50 to-gray-800/50 flex items-center justify-center border border-purple-500/30`}>
+        <div className="text-center">
+          <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+          <p className="text-gray-400 text-sm">Imagem não disponível</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={imageSrc}
+      alt={alt}
+      className={className}
+      onError={handleError}
+      loading="lazy"
+    />
+  );
+};
+
+export default function Home() {
   const [activeTab, setActiveTab] = useState('hoje');
   const [dateTime, setDateTime] = useState(new Date());
   const [leituraAtiva, setLeituraAtiva] = useState(null);
@@ -88,7 +141,7 @@ As reedições incluem introduções de autores contemporâneos, contextualizand
       id: 1,
       titulo: "Ecossistema Quântico",
       autor: "Luana Martins",
-      capa: "https://images.unsplash.com/photo-1621351183012-e2f3db3a5c3f?w=400&h=600&fit=crop",
+      capa: "https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?w=400&h=600&fit=crop",
       genero: "Hard Science Fiction",
       rating: 4.9,
       descricao: "Biólogos descobrem uma forma de vida que existe simultaneamente em múltiplas realidades quânticas.",
@@ -126,7 +179,7 @@ A investigação leva Marcus ao submundo das memórias falsas, onde hackers cria
       id: 3,
       titulo: "O Último Farol",
       autor: "Beatriz Silveira",
-      capa: "https://images.unsplash.com/photo-1604866830893-c13cafa515d5?w=400&h=600&fit=crop",
+      capa: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=600&fit=crop",
       genero: "Distopia Climática",
       rating: 4.8,
       descricao: "Após o colapso climático global, guardiões de um farol protegem a última biblioteca física da Terra.",
@@ -146,7 +199,7 @@ A trama se intensifica quando uma corporação vem para digitalizar e controlar 
       id: 4,
       titulo: "Fractal Temporal",
       autor: "Diego Almeida",
-      capa: "https://images.unsplash.com/photo-1614544048536-0d28caf77f41?w=400&h=600&fit=crop",
+      capa: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop",
       genero: "Viagem no Tempo",
       rating: 4.6,
       descricao: "Matemática descobre que o tempo tem estrutura fractal e cada decisão cria infinitos universos paralelos.",
@@ -344,10 +397,11 @@ A trama segue Julia tentando prevenir um colapso catastrófico através de infin
                 </div>
               </div>
 
-              <img 
+              <ImageWithFallback
                 src={leituraAtiva.imagem}
                 alt={leituraAtiva.titulo}
                 className="w-full h-96 object-cover rounded-2xl mb-8"
+                fallbackStyle="noticia"
               />
 
               <div className="prose prose-invert prose-lg max-w-none mb-12">
@@ -399,10 +453,11 @@ A trama segue Julia tentando prevenir um colapso catastrófico através de infin
                             className="bg-gradient-to-br from-blue-900/20 to-purple-900/20 border border-blue-500/20 rounded-xl p-6"
                           >
                             <div className="flex items-start gap-4">
-                              <img 
+                              <ImageWithFallback
                                 src={comentario.avatar}
                                 alt={comentario.autor}
                                 className="w-12 h-12 rounded-full border-2 border-cyan-500"
+                                fallbackStyle="avatar"
                               />
                               <div className="flex-1">
                                 <div className="flex items-center gap-3 mb-2">
@@ -430,10 +485,11 @@ A trama segue Julia tentando prevenir um colapso catastrófico através de infin
             <article>
               <div className="grid md:grid-cols-3 gap-8 mb-12">
                 <div className="md:col-span-1">
-                  <img 
+                  <ImageWithFallback
                     src={leituraAtiva.capa}
                     alt={leituraAtiva.titulo}
                     className="w-full rounded-2xl shadow-2xl shadow-purple-500/30"
+                    fallbackStyle="book"
                   />
                   <div className="mt-6 p-6 bg-gradient-to-br from-purple-900/50 to-black border border-purple-500/30 rounded-2xl">
                     <RatingStars rating={leituraAtiva.rating} />
@@ -510,10 +566,11 @@ A trama segue Julia tentando prevenir um colapso catastrófico através de infin
                                 className="bg-gradient-to-br from-blue-900/20 to-purple-900/20 border border-blue-500/20 rounded-xl p-6"
                               >
                                 <div className="flex items-start gap-4">
-                                  <img 
+                                  <ImageWithFallback
                                     src={comentario.avatar}
                                     alt={comentario.autor}
                                     className="w-12 h-12 rounded-full border-2 border-cyan-500"
+                                    fallbackStyle="avatar"
                                   />
                                   <div className="flex-1">
                                     <div className="flex items-center gap-3 mb-2">
@@ -620,10 +677,11 @@ A trama segue Julia tentando prevenir um colapso catastrófico através de infin
                 >
                   <div className="bg-gradient-to-br from-gray-900 to-black border border-purple-500/30 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-purple-500/30 transition-all duration-300 group-hover:scale-105">
                     <div className="relative">
-                      <img 
+                      <ImageWithFallback
                         src={noticia.imagem}
                         alt={noticia.titulo}
                         className="w-full h-64 object-cover"
+                        fallbackStyle="noticia"
                       />
                       <div className="absolute top-4 left-4">
                         <span className="px-3 py-1 bg-purple-600 text-white text-sm font-bold rounded-full">
@@ -706,10 +764,11 @@ A trama segue Julia tentando prevenir um colapso catastrófico através de infin
                 >
                   <div className="bg-gradient-to-br from-gray-900 to-black border border-purple-500/30 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-purple-500/30 transition-all duration-300 group-hover:scale-105">
                     <div className="relative">
-                      <img 
+                      <ImageWithFallback
                         src={livro.capa}
                         alt={livro.titulo}
                         className="w-full h-80 object-cover"
+                        fallbackStyle="book"
                       />
                       {livro.destaque && (
                         <div className="absolute top-3 left-3">
@@ -780,10 +839,11 @@ A trama segue Julia tentando prevenir um colapso catastrófico através de infin
                   className="bg-gradient-to-br from-gray-900 to-black border border-purple-500/30 rounded-2xl p-8 hover:shadow-xl hover:shadow-purple-500/20 transition-all"
                 >
                   <div className="flex items-start gap-6">
-                    <img 
+                    <ImageWithFallback
                       src={resenha.avatar}
                       alt={resenha.reviewer}
                       className="w-16 h-16 rounded-full border-3 border-cyan-500"
+                      fallbackStyle="avatar"
                     />
                     <div className="flex-1">
                       <div className="flex items-center gap-4 mb-4">
