@@ -526,3 +526,18 @@ A trama segue Julia tentando prevenir um colapso catastrófico através de infin
         <span>Responder</span>
     </button>
 </div>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    </article>
+)}
+</div>
+</div>
+</div>
+);
+}
+
