@@ -1,351 +1,300 @@
-// Serviço ULTRA-ROBUSTO para literatura
-// GARANTIDO para funcionar - SEM ERROS
+
+// src/services/services_literaturaApi.js
+// Serviço para buscar notícias, lançamentos e prêmios literários
+// Usa Vite env vars: VITE_NEWSAPI_KEY, VITE_GOOGLE_NEWS_KEY
+// Exporta funções esperadas pelo Home.jsx
 
 const API_KEYS = {
-  newsapi: process.env.REACT_APP_NEWSAPI_KEY || 'demo_key'
+  newsapi: import.meta.env.VITE_NEWSAPI_KEY || 'demo_key',
+  googleNews: import.meta.env.VITE_GOOGLE_NEWS_KEY || 'demo_key'
 };
 
+// --- FUNÇÕES PRINCIPAIS (exportadas) ---
 export const buscarNoticiasLiterarias = async (editoras = []) => {
   try {
-    // Dados ULTRA-CONFIÁVEIS com datas VÁLIDAS
-    const noticias = [
-      {
-        id: 1,
-        titulo: "Novo romance de Chico Buarque conquista crítica",
-        autor: "Companhia das Letras",
-        categoria: "Notícia",
-        tempo: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2h atrás
-        imagem: "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=800&h=500&fit=crop",
-        resumo: "O mais recente romance do compositor e escritor está sendo elogiado pela profundidade narrativa.",
-        conteudoCompleto: "Conteúdo completo...",
-        tags: ["Romance", "Chico Buarque"],
-        views: "1.2K"
-      },
-      {
-        id: 2,
-        titulo: "Prêmio Jabuti 2025 abre inscrições",
-        autor: "Câmara Brasileira do Livro",
-        categoria: "Prêmio",
-        tempo: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(), // 6h atrás
-        imagem: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800&h=500&fit=crop",
-        resumo: "Inscrições para o Prêmio Jabuti 2025 estão abertas até março de 2025.",
-        conteudoCompleto: "Prêmio Jabuti...",
-        tags: ["Prêmio", "Jabuti"],
-        views: "856"
-      },
-      {
-        id: 3,
-        titulo: "Editora Globo lança nova coleção de clássicos",
-        autor: "Editora Globo",
-        categoria: "Lançamento",
-        tempo: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(), // 12h atrás
-        imagem: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800&h=500&fit=crop",
-        resumo: "Nova coleção traz clássicos da literatura mundial em edições especiais.",
-        conteudoCompleto: "Editora Globo...",
-        tags: ["Editora", "Clássicos"],
-        views: "2.1K"
-      },
-      {
-        id: 4,
-        titulo: "Prêmio Portugal Telecom anuncia finalistas",
-        autor: "Fundação Biblioteca Nacional",
-        categoria: "Prêmio",
-        tempo: new Date(Date.now() - 18 * 60 * 60 * 1000).toISOString(), // 18h atrás
-        imagem: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800&h=500&fit=crop",
-        resumo: "Os finalistas do Prêmio Portugal Telecom 2025 foram anunciados hoje.",
-        conteudoCompleto: "Prêmio Portugal Telecom...",
-        tags: ["Prêmio", "Portugal Telecom"],
-        views: "1.5K"
-      },
-      {
-        id: 5,
-        titulo: "Mariana Enriquez ganha prêmio internacional",
-        autor: "Editora Rocco",
-        categoria: "Conquista",
-        tempo: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // 1 dia atrás
-        imagem: "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=800&h=500&fit=crop",
-        resumo: "A escritora argentina Mariana Enriquez recebe reconhecimento internacional.",
-        conteudoCompleto: "Mariana Enriquez...",
-        tags: ["Conquista", "Internacional"],
-        views: "3.2K"
-      },
-      {
-        id: 6,
-        titulo: "São Paulo sedia maior feira literária do país",
-        autor: "Prefeitura de São Paulo",
-        categoria: "Evento",
-        tempo: new Date(Date.now() - 30 * 60 * 60 * 1000).toISOString(), // 30h atrás
-        imagem: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800&h=500&fit=crop",
-        resumo: "A FLISP acontece em dezembro com escritores nacionais e internacionais.",
-        conteudoCompleto: "FLISP 2025...",
-        tags: ["Evento", "São Paulo"],
-        views: "987"
-      }
-    ];
+    const todas = [];
 
-    // Adicionar notícias das editoras
-    if (editoras && editoras.length > 0) {
-      for (let i = 0; i < Math.min(editoras.length, 3); i++) {
-        const editora = editoras[i];
-        noticias.push({
-          id: noticias.length + 1,
-          titulo: `${editora.nome}: Últimas novidades`,
-          autor: editora.nome,
-          categoria: "Editora",
-          tempo: new Date(Date.now() - (i + 1) * 60 * 60 * 1000).toISOString(),
-          imagem: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800&h=500&fit=crop",
-          resumo: `Acompanhe as novidades de ${editora.nome}.`,
-          tags: [editora.nome, "Editora"],
-          views: `${Math.floor(Math.random() * 500 + 100)}K`
-        });
+    // tentar dados reais
+    const reais = await buscarNoticiasReais();
+    if (reais && reais.length) {
+      todas.push(...reais);
+    } else {
+      todas.push(...gerarNoticiasMelhoradas());
+    }
+
+    // notícias por editora (simuladas se necessário)
+    for (const editora of editoras) {
+      try {
+        const porEditora = buscarPorEditora(editora);
+        if (porEditora && porEditora.length) todas.push(...porEditora);
+      } catch (err) {
+        console.warn('Erro buscarPorEditora:', err?.message || err);
       }
     }
 
-    return noticias.slice(0, 6); // Máximo 6 notícias
-    
+    return filtrarNoticiasRelevantes(todas);
   } catch (error) {
-    console.error('Erro ao buscar notícias:', error);
-    return [{
-      id: 1,
-      titulo: "Sistema de notícias em atualização",
-      autor: "FC Brasil",
-      categoria: "Sistema",
-      tempo: new Date().toISOString(),
-      imagem: "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=800&h=500&fit=crop",
-      resumo: "Estamos configurando o sistema de busca automática.",
-      tags: ["Sistema"],
-      views: "0"
-    }];
+    console.error('buscarNoticiasLiterarias erro:', error);
+    return gerarNoticiasMelhoradas();
   }
 };
 
 export const buscarLancamentosLivros = async (editoras = []) => {
   try {
-    const lancamentos = [
-      {
-        id: 1,
-        titulo: "O Jardim das Mentiras",
-        autor: "Lucia Ferreira",
-        capa: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop",
-        genero: "Romance Psicológico",
-        rating: 4.6,
-        descricao: "Um thriller psicológico que explora as complexidades da memória e do esquecimento.",
-        conteudoCompleto: "Em 'O Jardim das Mentiras', Lucia Ferreira constrói uma narrativa envolvente...",
-        destaque: true,
-        novidade: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString() // 1 dia atrás
-      },
-      {
-        id: 2,
-        titulo: "Cartas de um Morto",
-        autor: "Roberto Silva",
-        capa: "https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?w=400&h=600&fit=crop",
-        genero: "Ficção Científica",
-        rating: 4.8,
-        descricao: "Uma exploração tocante sobre morte, memória e tecnologia através de cartas póstumas.",
-        conteudoCompleto: "Roberto Silva entrega uma obra-prima da ficção científica contemporânea...",
-        destaque: false,
-        novidade: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString() // 3 dias atrás
-      },
-      {
-        id: 3,
-        titulo: "São Paulo: Cidade das Emoções",
-        autor: "Ana Paula Santos",
-        capa: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&h=600&fit=crop",
-        genero: "Crônica",
-        rating: 4.5,
-        descricao: "Crônicas urbanas que capturam a alma da maior cidade do Brasil.",
-        conteudoCompleto: "Ana Paula Santos nos presenteia com crônicas que dão vida às ruas paulistanas...",
-        destaque: false,
-        novidade: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString() // 5 dias atrás
-      },
-      {
-        id: 4,
-        titulo: "Noites de Inverno",
-        autor: "Carlos Mendes",
-        capa: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=600&fit=crop",
-        genero: "Romance",
-        rating: 4.7,
-        descricao: "Uma história de amor e superação ambientada no inverno paulista.",
-        conteudoCompleto: "Carlos Mendes explora temas universais em uma narrativa cativante...",
-        destaque: true,
-        novidade: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString() // 7 dias atrás
-      },
-      {
-        id: 5,
-        titulo: "A Jornada Final",
-        autor: "Fernanda Costa",
-        capa: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop",
-        genero: "Ficção Científica",
-        rating: 4.9,
-        descricao: "Uma épica jornada espacial que questiona nossa compreensão do tempo.",
-        conteudoCompleto: "Fernanda Costa nos transporta para um futuro distante...",
-        destaque: true,
-        novidade: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString() // 10 dias atrás
-      },
-      {
-        id: 6,
-        titulo: "Reflexões Urbanas",
-        autor: "Pedro Almeida",
-        capa: "https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?w=400&h=600&fit=crop",
-        genero: "Ensaio",
-        rating: 4.4,
-        descricao: "Ensaios sobre a vida moderna e suas contradições.",
-        conteudoCompleto: "Pedro Almeida oferece uma análise perspicaz da sociedade contemporânea...",
-        destaque: false,
-        novidade: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString() // 14 dias atrás
-      },
-      {
-        id: 7,
-        titulo: "Memórias de uma Época",
-        autor: "Juliana Lima",
-        capa: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&h=600&fit=crop",
-        genero: "Memórias",
-        rating: 4.6,
-        descricao: "As memórias de uma geração que viu o mundo mudar radicalmente.",
-        conteudoCompleto: "Juliana Lima reconta com emoção os momentos que marcaram sua geração...",
-        destaque: false,
-        novidade: new Date(Date.now() - 21 * 24 * 60 * 60 * 1000).toISOString() // 21 dias atrás
-      },
-      {
-        id: 8,
-        titulo: "Entre Dois Mundos",
-        autor: "André Ferreira",
-        capa: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=600&fit=crop",
-        genero: "Fantasia",
-        rating: 4.8,
-        descricao: "Uma jornada mágica entre o mundo real e o fantástico.",
-        conteudoCompleto: "André Ferreira cria um universo rico em magia e mistério...",
-        destaque: true,
-        novidade: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString() // 30 dias atrás
-      }
-    ];
+    const todos = [];
 
-    // Adicionar lançamentos das editoras se existirem
-    if (editoras && editoras.length > 0) {
-      const livrosPorEditora = [
-        { titulo: "Novo Romance", autor: "Autor Exemplo", genero: "Romance" },
-        { titulo: "Contos Modernos", autor: "Escritor Atual", genero: "Contos" },
-        { titulo: "Poesia Urbana", autor: "Poeta Contemporâneo", genero: "Poesia" }
-      ];
+    const reais = await buscarLancamentosReais();
+    if (reais && reais.length) {
+      // normaliza campos para o formato esperado no Home.jsx
+      todos.push(...reais.map(normalizarLancamento));
+    } else {
+      todos.push(...gerarLancamentosMelhorados());
+    }
 
-      for (let i = 0; i < Math.min(editoras.length, 3); i++) {
-        const editora = editoras[i];
-        const livro = livrosPorEditora[i % livrosPorEditora.length];
-        lancamentos.push({
-          id: lancamentos.length + 1,
-          titulo: livro.titulo,
-          autor: livro.autor,
-          capa: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop",
-          genero: livro.genero,
-          rating: Math.round((Math.random() * 2 + 3) * 10) / 10,
-          descricao: `Novo livro publicado por ${editora.nome}.`,
-          destaque: Math.random() > 0.7,
-          novidade: new Date(Date.now() - (i + 1) * 24 * 60 * 60 * 1000).toISOString()
-        });
+    for (const editora of editoras) {
+      try {
+        const porEditora = buscarLancamentosPorEditora(editora);
+        if (porEditora && porEditora.length) todos.push(...porEditora.map(normalizarLancamento));
+      } catch (err) {
+        console.warn('Erro buscarLancamentosPorEditora:', err?.message || err);
       }
     }
 
-    return lancamentos.slice(0, 8); // Máximo 8 lançamentos
-    
+    return organizarLancamentos(todos);
   } catch (error) {
-    console.error('Erro ao buscar lançamentos:', error);
-    return [{
-      id: 1,
-      titulo: "Carregando lançamentos...",
-      autor: "Sistema",
-      capa: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop",
-      genero: "Carregando",
-      rating: 5.0,
-      descricao: "Sistema buscando os últimos lançamentos.",
-      destaque: false,
-      novidade: new Date().toISOString()
-    }];
+    console.error('buscarLancamentosLivros erro:', error);
+    return gerarLancamentosMelhorados();
   }
 };
 
 export const buscarPremios = async () => {
   try {
-    return [
-      { 
-        nome: "Prêmio Jabuti 2025", 
-        status: "Inscrições abertas até 31/03/2025", 
-        cor: "bg-yellow-500",
-        dataAtualizacao: "2024-12-07"
-      },
-      { 
-        nome: "Prêmio Portugal Telecom", 
-        status: "Finalistas anunciados em janeiro", 
-        cor: "bg-purple-500",
-        dataAtualizacao: "2024-12-05"
-      },
-      { 
-        nome: "Prêmio Oscar/Nebula (FC)", 
-        status: "Votação em andamento", 
-        cor: "bg-blue-500",
-        dataAtualizacao: "2024-12-06"
-      },
-      { 
-        nome: "Prêmio São Paulo de Literatura", 
-        status: "Edição 2025 em breve", 
-        cor: "bg-green-500",
-        dataAtualizacao: "2024-11-30"
-      },
-      { 
-        nome: "Prêmio APCA", 
-        status: "Recepção de obras 2024", 
-        cor: "bg-red-500",
-        dataAtualizacao: "2024-12-01"
-      },
-      { 
-        nome: "Prêmio SESC de Literatura", 
-        status: "Inscrições abertas", 
-        cor: "bg-orange-500",
-        dataAtualizacao: "2024-12-03"
-      }
+    // Tentar retornar dados reais (se você quiser integrar futuramente)
+    // Por ora retornar lista robusta
+    const premios = [
+      { id: 'jabuti-2025', titulo: "Prêmio Jabuti 2025", categoria: "Geral", vencedor: "—", editora: "CBL", data: new Date().toISOString(), imagem: null },
+      { id: 'saopaulo-2025', titulo: "Prêmio São Paulo de Literatura", categoria: "Regional", vencedor: "—", editora: "Fundação SP", data: new Date().toISOString(), imagem: null },
+      { id: 'apca-2024', titulo: "Prêmio APCA", categoria: "Crítica", vencedor: "—", editora: "APCA", data: new Date().toISOString(), imagem: null }
     ];
-    
-  } catch (error) {
-    console.error('Erro ao buscar prêmios:', error);
-    return [
-      { nome: "Prêmio Jabuti", status: "Atualizando...", cor: "bg-gray-500" }
-    ];
-  }
-};
 
-export const buscarResenhasComunitarias = async () => {
-  try {
-    return [
-      {
-        id: 1,
-        livro: "Terra Devastada",
-        autor: "William Gibson",
-        reviewer: "Carla Mendes",
-        avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop",
-        rating: 4.8,
-        tempo: "Há 2 horas",
-        texto: "Gibson entrega mais uma obra-prima cyberpunk, explorando distopias tecnológicas com maestria narrativa.",
-        curtidas: 156,
-        comentarios: 23
-      },
-      {
-        id: 2,
-        livro: "Klara e o Sol",
-        autor: "Kazuo Ishiguro",
-        reviewer: "Roberto Silva",
-        avatar: "https://.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop",
-        rating: 4.9,
-        tempo: "Há 4 horas",
-        texto: "Ishiguro explora a artificialidade do afeto com sua poética habitual, numa narrativa tocante sobre amor e perda.",
-        curtidas: 203,
-        comentarios: 45
-      }
-    ];
+    // normalizar para garantir campos usados no Home.jsx
+    return premios.map(p => ({
+      id: p.id,
+      titulo: p.titulo,
+      categoria: p.categoria,
+      vencedor: p.vencedor,
+      editora: p.editora,
+      data: p.data,
+      imagem: p.imagem || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop'
+    }));
   } catch (error) {
-    console.error('Erro ao buscar resenhas:', error);
+    console.error('buscarPremios erro:', error);
     return [];
   }
 };
 
-export const configurarAtualizacaoAutomatica = (callback, intervalo = 6) => {
-  return setInterval(callback, intervalo * 60 * 60 * 1000);
+// --- IMPLEMENTAÇÕES AUXILIARES E HELPERS ---
+
+// Tenta buscar usando NewsAPI (se a chave estiver presente)
+const buscarNoticiasReais = async () => {
+  try {
+    if (!API_KEYS.newsapi || API_KEYS.newsapi === 'demo_key') return [];
+
+    const q = encodeURIComponent('literatura livros lançamento editora');
+    const url = `https://newsapi.org/v2/everything?q=${q}&language=pt&pageSize=20&sortBy=publishedAt&apiKey=${API_KEYS.newsapi}`;
+
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`NewsAPI status ${res.status}`);
+    const json = await res.json();
+    if (!json.articles || !json.articles.length) return [];
+
+    return json.articles.map((a, idx) => ({
+      id: `newsapi-${idx}-${new Date(a.publishedAt).getTime() || idx}`,
+      titulo: a.title || 'Sem título',
+      resumo: a.description || a.content || '',
+      imagem: a.urlToImage || 'https://images.unsplash.com/photo-1532012197267-da84d127e765?w=800&h=500&fit=crop',
+      editora: a.source?.name || 'Fonte desconhecida',
+      data: a.publishedAt || new Date().toISOString(),
+      categoria: 'notícia',
+      link: a.url || '#'
+    }));
+  } catch (error) {
+    console.warn('buscarNoticiasReais falhou:', error?.message || error);
+    return [];
+  }
+};
+
+// Enquanto não há API real de lançamentos, retorna vazio (para cair no fallback)
+const buscarLancamentosReais = async () => {
+  try {
+    // A implementação real pode consultar uma API de editoras/feeds RSS etc.
+    return [];
+  } catch (error) {
+    console.warn('buscarLancamentosReais erro:', error?.message || error);
+    return [];
+  }
+};
+
+// Buscar por termo (melhorado / fallback)
+const buscarPorTermo = (termo) => {
+  const now = new Date();
+  const horas = Math.floor(Math.random() * 48) + 1;
+  return [{
+    id: `term-${termo}-${now.getTime()}`,
+    titulo: `${termo.charAt(0).toUpperCase() + termo.slice(1)}: últimas notícias`,
+    resumo: `Atualizações sobre ${termo} no mundo literário.`,
+    imagem: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?w=800&h=500&fit=crop',
+    editora: 'FC Brasil',
+    data: new Date(now.getTime() - horas * 3600 * 1000).toISOString(),
+    categoria: 'notícia',
+    link: '#'
+  }];
+};
+
+// Buscar notícias simuladas por editora
+const buscarPorEditora = (editora) => {
+  const now = new Date();
+  const horas = Math.floor(Math.random() * 24) + 1;
+  return [{
+    id: `editora-${editora.id || editora.nome}-${now.getTime()}`,
+    titulo: `${editora.nome}: novidades`,
+    resumo: `Últimas informações sobre ${editora.nome} e suas publicações.`,
+    imagem: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800&h=500&fit=crop',
+    editora: editora.nome,
+    data: new Date(now.getTime() - horas * 3600 * 1000).toISOString(),
+    categoria: 'notícia',
+    link: editora.url || '#'
+  }];
+};
+
+// Buscar lançamentos simulados por editora
+const buscarLancamentosPorEditora = (editora) => {
+  const now = new Date();
+  const dias = Math.floor(Math.random() * 30) + 1;
+  const livrosExemplos = [
+    "O Último Romance", "Noites de Inverno", "Cartas de Amor Perdidas",
+    "A Sombra do Tempo", "Memórias de uma Época", "Ruas de São Paulo",
+    "O Escritor Solitário", "Entre Dois Mundos", "A Jornada Final"
+  ];
+  const autoresEx = [
+    "Mariana Silva", "Carlos Rodrigues", "Ana Paula Santos",
+    "Roberto Mendes", "Luciana Ferreira", "Pedro Almeida"
+  ];
+
+  const titulo = livrosExemplos[Math.floor(Math.random() * livrosExemplos.length)];
+  const autor = autoresEx[Math.floor(Math.random() * autoresEx.length)];
+
+  return [{
+    id: `lanc-${editora.id || editora.nome}-${Date.now()}`,
+    titulo,
+    autor,
+    editora: editora.nome,
+    genero: "Romance",
+    imagem: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop",
+    sinopse: `Novo lançamento da ${editora.nome}. Uma obra que promete cativar.`,
+    dataLancamento: new Date(now.getTime() - dias * 24 * 3600 * 1000).toISOString(),
+    preco: `R$ ${(Math.random() * 60 + 20).toFixed(2)}`,
+    destaque: Math.random() > 0.7
+  }];
+};
+
+// Normalizadores e geradores fallback
+const normalizarLancamento = (l) => ({
+  id: l.id ?? `l-${Date.now()}`,
+  titulo: l.titulo ?? l.name ?? 'Sem título',
+  autor: l.autor ?? l.writer ?? 'Autor desconhecido',
+  editora: l.editora ?? l.publisher ?? 'Editora desconhecida',
+  genero: l.genero ?? 'Geral',
+  imagem: l.imagem ?? l.capa ?? 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop',
+  sinopse: l.sinopse ?? l.descricao ?? '',
+  dataLancamento: l.dataLancamento ?? l.novidade ?? new Date().toISOString(),
+  preco: l.preco ?? 'R$ 0,00',
+  destaque: !!l.destaque
+});
+
+const gerarNoticiasMelhoradas = () => {
+  const now = new Date();
+  return [
+    {
+      id: `g-1-${now.getTime()}`,
+      titulo: "Novo romance de Chico Buarque conquista crítica",
+      resumo: "O mais recente romance do compositor e escritor está sendo elogiado pela profundidade narrativa.",
+      imagem: "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=800&h=500&fit=crop",
+      editora: "Companhia das Letras",
+      data: new Date(now.getTime() - 2 * 3600 * 1000).toISOString(),
+      categoria: "notícia",
+      link: "#"
+    },
+    {
+      id: `g-2-${now.getTime()}`,
+      titulo: "Prêmio Jabuti 2025 abre inscrições",
+      resumo: "Inscrições para o Prêmio Jabuti 2025 estão abertas até março de 2025.",
+      imagem: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800&h=500&fit=crop",
+      editora: "Câmara Brasileira do Livro",
+      data: new Date(now.getTime() - 6 * 3600 * 1000).toISOString(),
+      categoria: "prêmio",
+      link: "#"
+    }
+  ];
+};
+
+const gerarLancamentosMelhorados = () => {
+  const now = new Date();
+  return [
+    {
+      id: `gl-1-${now.getTime()}`,
+      titulo: "O Jardim das Mentiras",
+      autor: "Lucia Ferreira",
+      editora: "Editora Aleph",
+      genero: "Romance Psicológico",
+      imagem: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop",
+      sinopse: "Um thriller psicológico que explora as complexidades da memória e do esquecimento.",
+      dataLancamento: new Date(now.getTime() - 1 * 24 * 3600 * 1000).toISOString(),
+      preco: "R$ 49.90",
+      destaque: true
+    },
+    {
+      id: `gl-2-${now.getTime()}`,
+      titulo: "Cartas de um Morto",
+      autor: "Roberto Silva",
+      editora: "Companhia das Letras",
+      genero: "Ficção Científica",
+      imagem: "https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?w=400&h=600&fit=crop",
+      sinopse: "Uma exploração tocante sobre morte, memória e tecnologia.",
+      dataLancamento: new Date(now.getTime() - 3 * 24 * 3600 * 1000).toISOString(),
+      preco: "R$ 59.90",
+      destaque: false
+    }
+  ];
+};
+
+// Filtrar duplicatas e ordenar
+const filtrarNoticiasRelevantes = (noticias) => {
+  const únicas = noticias.filter((n, i, arr) => i === arr.findIndex(x => x.titulo === n.titulo));
+  return únicas
+    .sort((a, b) => new Date(b.data).getTime() - new Date(a.data).getTime())
+    .slice(0, 12)
+    .map(n => ({
+      // garantir campos que o Home espera
+      id: n.id,
+      titulo: n.titulo,
+      resumo: n.resumo ?? n.conteudo ?? '',
+      imagem: n.imagem ?? 'https://images.unsplash.com/photo-1532012197267-da84d127e765?w=800&h=500&fit=crop',
+      editora: n.editora ?? n.autor ?? 'Fonte desconhecida',
+      data: n.data ?? new Date().toISOString(),
+      categoria: n.categoria ?? 'notícia',
+      link: n.link ?? '#'
+    }));
+};
+
+const organizarLancamentos = (lancamentos) => {
+  return lancamentos
+    .map(normalizarLancamento)
+    .sort((a, b) => new Date(b.dataLancamento).getTime() - new Date(a.dataLancamento).getTime())
+    .slice(0, 12);
+};
+
+// Export util (opcional)
+export const configurarAtualizacaoAutomatica = (callback, intervaloHoras = 6) => {
+  return setInterval(callback, intervaloHoras * 3600 * 1000);
 };
