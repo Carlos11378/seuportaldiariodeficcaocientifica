@@ -1,4 +1,3 @@
-
 // src/services/services_literaturaApi.js
 // Serviço para buscar notícias, lançamentos e prêmios literários
 // Usa Vite env vars: VITE_NEWSAPI_KEY, VITE_GOOGLE_NEWS_KEY
@@ -298,3 +297,4 @@ const organizarLancamentos = (lancamentos) => {
 export const configurarAtualizacaoAutomatica = (callback, intervaloHoras = 6) => {
   return setInterval(callback, intervaloHoras * 3600 * 1000);
 };
+
